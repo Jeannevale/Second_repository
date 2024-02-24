@@ -17,9 +17,10 @@ from flask_login import UserMixin, login_user, LoginManager, current_user, logou
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 import hashlib
+import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.getenv("FLASK-KEY")
 Bootstrap5(app)
 
 #<img src="{{ avatars.gravatar(hashlib.md5(n.user.email.lower().encode('utf-8')).hexdigest()) }}">
@@ -27,7 +28,8 @@ Bootstrap5(app)
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts8.db'
+#, "sqlite:///posts8.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI")
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
@@ -403,7 +405,7 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5003)
+    app.run(debug=False, port=5003)
 
 #dalla funzione Python al codice si possono passare oggetti, ma non viceversa
 # usa |safe nell'html quando vuoi scrivere un testo che é stato salvato come testo html, ma non vuoi riportare tutti
